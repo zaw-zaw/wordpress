@@ -21,3 +21,17 @@ spec:
   accessModes:
   - ReadWriteOnce
   storageClassName: managed-csi
+ 
+---
+
+apiVersion: v1 
+kind: PersistentVolumeClaim
+metadata:
+  name: infostar-pvc
+spec:
+  resources:
+    requests:
+      storage: 10Gi
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-csi

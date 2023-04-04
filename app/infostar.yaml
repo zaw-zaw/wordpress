@@ -13,58 +13,54 @@ spec:
   type: LoadBalancer
 
 ---
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: infostar
+  labels:
+    app: infostar
+minReplicas: 1
+maxReplicas: 5
+metrics:
+  - type: Resource
+resource:
+name: memory
+targetAverageUtilization: 60
 spec:
-  scaleTargetRef:
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: infostar
-    labels:
+  replicas: 1
+  selector:
+    matchLabels:
       app: infostar
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-  - type: Resource 
-  resource: 
-  name: memory 
-  targetAverageUtilization: 60
-  spec:
-    selector:
-      matchLabels:
-        app: infostar
-        tier: frontend
-    strategy:
-      type: Recreate
-    template:
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
     metadata:
       labels:
-        app: infostar
-        tier: frontend
-    spec:
-      containers:
+       app: infostar
+       tier: frontend
+  spec:
+    replicaset: 1
+    containers:
       - image: wordpress:4.8-apache
         name: infostar
         env:
-        - name: WORDPRESS_DB_HOST
-          value: wordpress-mysql
-        - name: WORDPRESS_DB_NAME
-          value: infostar
-        - name: WORDPRESS_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+          - name: WORDPRESS_DB_HOST
+            value: wordpress-mysql
+          - name: WORDPRESS_DB_NAME
+            value: infostar
+          - name: WORDPRESS_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-pass
+                key: password
         ports:
-        - containerPort: 80
-          name: wordpress
+          - containerPort: 80
+            name: wordpress
         volumeMounts:
-        - name: wordpress-persistent-storage
-          mountPath: /var/www/html
-      volumes:
+          - name: wordpress-persistent-storage
+            mountPath: /var/www/html
+    volumes:
       - name: wordpress-persistent-storage
         persistentVolumeClaim:
           claimName: infostar-pvc

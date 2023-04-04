@@ -41,7 +41,7 @@ spec:
         - name: WORDPRESS_DB_HOST
           value: wordpress-mysql
         - name: WORDPRESS_DB_NAME
-          value: wordpress-mysql
+          value: infostar
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:

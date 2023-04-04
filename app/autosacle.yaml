@@ -26,5 +26,3 @@ items:
           averageValue: 1m
         name: cpu
       type: Resource
-    currentReplicas: 1
-    desiredReplicas: 1

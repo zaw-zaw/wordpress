@@ -21,7 +21,7 @@ metadata:
   labels:
     app: infostar
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: infostar

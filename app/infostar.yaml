@@ -13,22 +13,34 @@ spec:
   type: LoadBalancer
 
 ---
-
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: infostar
-  labels:
-    app: infostar
+  name: test-hpa
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
+  scaleTargetRef:
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: infostar
+    labels:
       app: infostar
-      tier: frontend
-  strategy:
-    type: Recreate
-  template:
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource 
+  resource: 
+  name: memory 
+  targetAverageUtilization: 60
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: infostar
+        tier: frontend
+    strategy:
+      type: Recreate
+    template:
     metadata:
       labels:
         app: infostar
